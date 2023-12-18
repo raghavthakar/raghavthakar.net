@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/styles.css" /> 
+    <title>Raghav Thakar</title>
+</head>
+<body>
+    <nav align="center">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+    </nav>
+
+
+    <h1>Projects</h1>
+
+    <p>A very conscious attempt at collecting interesting things I've worked on. Also: An archive of my work.</p>
+    <p>I'm still working on being able to view/sort/organise projects based on tags and date.
+    </p>
+    <ul id="project-posts-list"></ul>
+
+    <script>
+        async function fetchFileItems() {
+            try {
+                const response = await fetch('projects/utilities/projects_list.json');
+                const project_list_json = await response.json();
+                // You can use file_items here
+                return project_list_json; // You can return it if needed
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        fetchFileItems()
+            .then((project_list_json) => {
+                // You can also use file_items here if you returned it
+                const projectPostsList = document.getElementById("project-posts-list");
+
+                const entries = Object.entries(project_list_json);
+
+                // Sort the entries by date in reverse order (newest first)
+                entries.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+
+                entries.forEach(([date_key, filepath_value]) => {
+                    
+                    fetch(filepath_value)
+                        .then(response => response.text())
+                        .then(htmlContent => {
+                            const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
+                            title = doc.getElementById('project-content').querySelectorAll('h1')[0].textContent;
+                            tags = doc.getElementById('project-tags').textContent;
+
+                            // Iterate through the links and create list items with hyperlinks
+                            const li = document.createElement("li");
+                            const a = document.createElement("a");
+                            a.href = filepath_value;
+                            a.textContent = date_key+' /  '+title+' ('+tags+')';
+                            li.appendChild(a);
+                            projectPostsList.appendChild(li);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching or parsing ${filepath_value}:', error);
+                        });
+                });
+        });
+    </script>
+    
+    <footer style="text-align: center;">
+        <p id="last-modified"></p>
+        <script>
+            const date = new Date(document.lastModified);
+            document.getElementById("last-modified").innerHTML = "Last modified: "+date;
+        </script>
+        <a href="https://madewithlove.org.in/" target="_blank" rel="noopener noreferrer">Made with ❤️ in India</a>
+    </footer>
+</body>
+
+</html>

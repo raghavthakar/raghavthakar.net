@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/styles.css" /> 
+    <title>Raghav Thakar</title>
+</head>
+<body>
+    <nav align="center">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+    </nav>
+
+
+    <h1>Blog</h1>
+    <ul id="blog-posts-list"></ul>
+    
+    <script>
+        // const files = [
+        //     'blogs/posts-html/July-27-2023.html',
+        //     'blogs/posts-html/May-22-2023.html',
+        //     'blogs/posts-html/May-08-2023.html'
+        // ];
+        async function fetchFileItems() {
+            try {
+                const response = await fetch('blogs/utilities/blogs_list.json');
+                const blog_list_json = await response.json();
+                return blog_list_json;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        fetchFileItems()
+            .then((blog_list_json) => {
+                const blogPostsList = document.getElementById("blog-posts-list");
+
+                // Convert the object to an array of entries
+                const entries = Object.entries(blog_list_json);
+
+                // Sort the entries by date in reverse order (newest first)
+                entries.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+
+                entries.forEach(([date_key, filepath_value]) => {
+                    fetch(filepath_value)
+                        .then(response => response.text())
+                        .then(htmlContent => {
+                            const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
+                            const title = doc.getElementById('blog-content').querySelectorAll('h1')[0].textContent;
+
+                            // Iterate through the links and create list items with hyperlinks
+                            const li = document.createElement("li");
+                            const a = document.createElement("a");
+                            a.href = filepath_value;
+                            a.textContent = date_key + ' / ' + title;
+                            console.log(title);
+                            li.appendChild(a);
+                            blogPostsList.appendChild(li);
+                        })
+                        .catch(error => {
+                            console.error(`Error fetching or parsing ${filepath_value}:`, error);
+                        });
+                });
+            });
+
+
+        
+
+    </script>
+    
+    <footer style="text-align: center;">
+        <p id="last-modified"></p>
+        <script>
+            const date = new Date(document.lastModified);
+            document.getElementById("last-modified").innerHTML = "Last modified: "+date;
+        </script>
+        <a href="https://madewithlove.org.in/" target="_blank" rel="noopener noreferrer">Made with ❤️ in India</a>
+    </footer>
+</body>
+
+</html>

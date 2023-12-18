@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/styles.css" /> 
+    <title>Raghav Thakar</title>
+</head>
+<body>
+    <nav align="center">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+    </nav>
+    <h1>About</h1>
+    <p>Reverse chronological updates (ideally once every month).</p>
+    <ul id="about-updates"></ul>
+
+    <script>
+        async function fetchFileItems() {
+            try {
+                const response = await fetch('about/utilities/about_updates.json');
+                const about_updates = await response.json();
+                return about_updates;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        fetchFileItems()
+            .then((about_updates) => {
+                const aboutUpdateList = document.getElementById("about-updates");
+
+                // Sort entries by date in descending order (newest first)
+                const sortedEntries = about_updates.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+
+                sortedEntries.forEach(entry => {
+                    const entryContainer = document.createElement("div");
+
+                    // Loop through each property of the entry
+                    for (const key in entry) {
+                        const value = entry[key];
+
+                        // Check if the value is an image path
+                        if (key === 'Proof' && /\.(jpg|jpeg|png)$/i.test(value)) {
+                            // If it's an image path, create an img element
+                            const imgElement = document.createElement('img');
+                            imgElement.src = value;
+                            imgElement.alt = 'Proof Image';
+                            imgElement.style = 'width: 30%;';
+                            entryContainer.appendChild(imgElement);
+                        } else {
+                            // Otherwise, create a p element
+                            const propertyElement = document.createElement('li');
+                            propertyElement.innerHTML = `<strong>${key}:</strong> ${value}`;
+                            entryContainer.appendChild(propertyElement);
+                        }
+                    }
+
+                    // Add some spacing between entries
+                    entryContainer.style.marginBottom = '20px';
+
+                    aboutUpdateList.appendChild(entryContainer);
+                });
+            });
+
+
+        
+
+    </script>
+
+    <footer style="text-align: center;">
+        <p id="last-modified"></p>
+        <script>
+            const date = new Date(document.lastModified);
+            document.getElementById("last-modified").innerHTML = "Last modified: "+date;
+        </script>
+        <a href="https://madewithlove.org.in/" target="_blank" rel="noopener noreferrer">Made with ❤️ in India</a>
+    </footer>
+</body>
+</html>
