@@ -15,12 +15,53 @@
     </nav>
     <h1>Hi! I'm Raghav Thakar</h1>
     <p>For long, I've tried to label what category the things I do fall in. Now, I've given up trying to find the 
-        right label for them. I find many, many thing fascinating. I try a lot of stuff, and for the most part I 
+        right label for them. I find many, many things fascinating. I try a lot of stuff, and for the most part I 
         have realised that being interested in many thing has helped me develop a much better appreciation 
         for the wonderful creations around me (and on the internet). So, this is where I try to 
         document what I've been up to, and what I've found interesting recently. So go ahead, wander around here, and see if
         you find something interesting!
     </p>
+
+    <img src="img/_uploads_63d514ab18bdf3.88858838_recov_image00000.png" alt="" id="img1" width="25%">
+    <img src="img/IMG-20221219-WA0021-01.jpeg" alt="" id="img2" width="25%">
+    <img src="img/profile4.png" alt="" id="img3" width="25%">
+    <img src="img/raghav_sprite_2_resized.jpg" alt="" id="img4" width="25%">
+    <button onclick="prevImage()">Previous</button>
+    It's all me
+    <button onclick="nextImage()">Next</button>
+
+    <script>
+    let currentImage = 1;
+
+    function showImage(index) {
+        const images = document.querySelectorAll('img');
+        images.forEach(img => img.style.display = 'none');
+
+        if (index < 1) {
+        currentImage = images.length;
+        } else if (index > images.length) {
+        currentImage = 1;
+        } else {
+        currentImage = index;
+        }
+
+        const currentImg = document.getElementById('img' + currentImage);
+        currentImg.style.display = 'block';
+    }
+
+    function prevImage() {
+        showImage(currentImage - 1);
+    }
+
+    function nextImage() {
+        showImage(currentImage + 1);
+    }
+
+    // Show the first image initially
+    showImage(currentImage);
+    </script>
+
+
 
     <footer style="text-align: center;">
         <p id="last-modified"></p>
