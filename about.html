@@ -71,21 +71,6 @@
     </script>
 
     <footer style="text-align: center;">
-        <p id="last-modified"></p>
-        <script>
-            fetch(location.href, { cache: 'reload' }).then(response => {
-                const lastModified = response.headers.get('Last-Modified');
-                if (lastModified) {
-                    const date = new Date(lastModified);
-                    document.getElementById("last-modified").innerHTML = "Last modified: " + date.toLocaleString();
-                } else {
-                    document.getElementById("last-modified").innerHTML = "Last modified date not available.";
-                }
-            }).catch(error => {
-                console.error('Error fetching last modified date:', error);
-                document.getElementById("last-modified").innerHTML = "Error fetching last modified date.";
-            });
-        </script>
         <a href="https://madewithlove.org.in/" target="_blank" rel="noopener noreferrer">Made with ❤️ in India</a>
     </footer>
 </body>
